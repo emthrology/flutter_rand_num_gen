@@ -129,7 +129,7 @@ class _Footer extends StatelessWidget {
       Expanded(
         child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              primary: RED,
+              backgroundColor: RED,
             ),
             onPressed: onPressed,
             child: Text('CREATE')),
