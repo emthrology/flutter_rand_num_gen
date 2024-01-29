@@ -12,6 +12,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  int maxNumber = 1000;
   List<int> randomNumbers = [123, 456, 789];
 
   @override
@@ -23,7 +24,9 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Column(
             children: [
-              _Header(),
+              _Header(
+                onPressed: onSettingsClicked,
+              ),
               _Body(
                 randomNumbers: randomNumbers,
               ),
@@ -41,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final rand = Random();
     final Set<int> newNumbers = {};
     while (newNumbers.length != 3) {
-      final number = rand.nextInt(1000);
+      final number = rand.nextInt(maxNumber);
       if (number > 99) {
         newNumbers.add(number);
       }
@@ -51,10 +54,27 @@ class _HomeScreenState extends State<HomeScreen> {
       randomNumbers = newNumbers.toList();
     });
   }
+
+  void onSettingsClicked() async {
+    final result = await Navigator.of(context).push<int>(
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return SettingsScreen();
+        },
+      ),
+    );
+
+    if(result != null) {
+      setState(() {
+        maxNumber = result;
+      });
+    }
+  }
 }
 
 class _Header extends StatelessWidget {
-  const _Header({super.key});
+  final VoidCallback onPressed;
+  const _Header({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -67,15 +87,7 @@ class _Header extends StatelessWidget {
               color: Colors.white, fontSize: 30.0, fontWeight: FontWeight.w700),
         ),
         IconButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                    builder: (BuildContext context) {
-                      return SettingsScreen();
-                    }
-                )
-              );
-            },
+            onPressed: onPressed,
             icon: Icon(Icons.settings, color: RED)
         )
       ],
